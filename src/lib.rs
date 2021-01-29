@@ -131,6 +131,8 @@ mod warning;
 
 pub use configuration::ConfigurationSource;
 use configuration::Namespace;
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
 use state::{OpenNode, OpenNodeType, State};
 use std::{
     borrow::Cow,
@@ -154,11 +156,13 @@ pub struct Configuration {
 
 /// List item of a definition list.
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct DefinitionListItem<'a> {
     /// The byte position in the wiki text where the element ends.
     pub end: usize,
 
     /// The content of the element.
+    #[cfg_attr(feature = "serde", serde(borrow))]
     pub nodes: Vec<Node<'a>>,
 
     /// The byte position in the wiki text where the element starts.
@@ -170,6 +174,7 @@ pub struct DefinitionListItem<'a> {
 
 /// Identifier for the type of a definition list item.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum DefinitionListItemType {
     /// Parsed from the code `:`.
     Details,
@@ -180,11 +185,13 @@ pub enum DefinitionListItemType {
 
 /// List item of an ordered list or unordered list.
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct ListItem<'a> {
     /// The byte position in the wiki text where the element ends.
     pub end: usize,
 
     /// The content of the element.
+    #[cfg_attr(feature = "serde", serde(borrow))]
     pub nodes: Vec<Node<'a>>,
 
     /// The byte position in the wiki text where the element starts.
@@ -193,6 +200,7 @@ pub struct ListItem<'a> {
 
 /// Parsed node.
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum Node<'a> {
     /// Toggle bold text. Parsed from the code `'''`.
     Bold {
@@ -218,6 +226,7 @@ pub enum Node<'a> {
         end: usize,
 
         /// Additional information for sorting entries on the category page, if any.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         ordinal: Vec<Node<'a>>,
 
         /// The byte position in the wiki text where the element starts.
@@ -254,6 +263,7 @@ pub enum Node<'a> {
         end: usize,
 
         /// The list items of the list.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         items: Vec<DefinitionListItem<'a>>,
 
         /// The byte position in the wiki text where the element starts.
@@ -266,6 +276,7 @@ pub enum Node<'a> {
         end: usize,
 
         /// The tag name.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         name: Cow<'a, str>,
 
         /// The byte position in the wiki text where the element starts.
@@ -278,6 +289,7 @@ pub enum Node<'a> {
         end: usize,
 
         /// The content of the element.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         nodes: Vec<Node<'a>>,
 
         /// The byte position in the wiki text where the element starts.
@@ -293,6 +305,7 @@ pub enum Node<'a> {
         level: u8,
 
         /// The content of the element.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         nodes: Vec<Node<'a>>,
 
         /// The byte position in the wiki text where the element starts.
@@ -320,6 +333,7 @@ pub enum Node<'a> {
         target: &'a str,
 
         /// Additional information for the image.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         text: Vec<Node<'a>>,
     },
 
@@ -344,6 +358,7 @@ pub enum Node<'a> {
         target: &'a str,
 
         /// The text to display for the link.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         text: Vec<Node<'a>>,
     },
 
@@ -362,6 +377,7 @@ pub enum Node<'a> {
         end: usize,
 
         /// The list items of the list.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         items: Vec<ListItem<'a>>,
 
         /// The byte position in the wiki text where the element starts.
@@ -380,12 +396,14 @@ pub enum Node<'a> {
     /// Parameter. Parsed from code starting with `{{{` and ending with `}}}`.
     Parameter {
         /// The default value of the parameter.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         default: Option<Vec<Node<'a>>>,
 
         /// The byte position in the wiki text where the element ends.
         end: usize,
 
         /// The name of the parameter.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         name: Vec<Node<'a>>,
 
         /// The byte position in the wiki text where the element starts.
@@ -398,6 +416,7 @@ pub enum Node<'a> {
         end: usize,
 
         /// The content of the element.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         nodes: Vec<Node<'a>>,
 
         /// The byte position in the wiki text where the element starts.
@@ -431,15 +450,18 @@ pub enum Node<'a> {
     /// Table. Parsed from code starting with `{|`.
     Table {
         /// The HTML attributes of the element.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         attributes: Vec<Node<'a>>,
 
         /// The captions of the table.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         captions: Vec<TableCaption<'a>>,
 
         /// The byte position in the wiki text where the element ends.
         end: usize,
 
         /// The rows of the table.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         rows: Vec<TableRow<'a>>,
 
         /// The byte position in the wiki text where the element starts.
@@ -455,6 +477,7 @@ pub enum Node<'a> {
         name: Cow<'a, str>,
 
         /// The content of the tag, between the start tag and the end tag, if any.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         nodes: Vec<Node<'a>>,
 
         /// The byte position in the wiki text where the element starts.
@@ -467,9 +490,11 @@ pub enum Node<'a> {
         end: usize,
 
         /// The name of the template.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         name: Vec<Node<'a>>,
 
         /// The parameters of the template.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         parameters: Vec<Parameter<'a>>,
 
         /// The byte position in the wiki text where the element starts.
@@ -494,6 +519,7 @@ pub enum Node<'a> {
         end: usize,
 
         /// The list items of the list.
+        #[cfg_attr(feature = "serde", serde(borrow))]
         items: Vec<ListItem<'a>>,
 
         /// The byte position in the wiki text where the element starts.
@@ -503,8 +529,10 @@ pub enum Node<'a> {
 
 /// Output of parsing wiki text.
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Output<'a> {
     /// The top level of parsed nodes.
+    #[cfg_attr(feature = "serde", serde(borrow))]
     pub nodes: Vec<Node<'a>>,
 
     /// Warnings from the parser telling that something is not well-formed.
@@ -513,17 +541,20 @@ pub struct Output<'a> {
 
 /// Template parameter.
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Parameter<'a> {
     /// The byte position in the wiki text where the element ends.
     pub end: usize,
 
     /// The name of the parameter, if any.
+    #[cfg_attr(feature = "serde", serde(borrow))]
     pub name: Option<Vec<Node<'a>>>,
 
     /// The byte position in the wiki text where the element starts.
     pub start: usize,
 
     /// The value of the parameter.
+    #[cfg_attr(feature = "serde", serde(borrow))]
     pub value: Vec<Node<'a>>,
 }
 
@@ -544,11 +575,14 @@ enum TagClass {
 
 /// Table caption.
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct TableCaption<'a> {
     /// The HTML attributes of the element.
+    #[cfg_attr(feature = "serde", serde(borrow))]
     pub attributes: Option<Vec<Node<'a>>>,
 
     /// The content of the element.
+    #[cfg_attr(feature = "serde", serde(borrow))]
     pub content: Vec<Node<'a>>,
 
     /// The byte position in the wiki text where the element ends.
@@ -560,11 +594,14 @@ pub struct TableCaption<'a> {
 
 /// Table cell.
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct TableCell<'a> {
     /// The HTML attributes of the element.
+    #[cfg_attr(feature = "serde", serde(borrow))]
     pub attributes: Option<Vec<Node<'a>>>,
 
     /// The content of the element.
+    #[cfg_attr(feature = "serde", serde(borrow))]
     pub content: Vec<Node<'a>>,
 
     /// The byte position in the wiki text where the element ends.
@@ -579,6 +616,7 @@ pub struct TableCell<'a> {
 
 /// Type of table cell.
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum TableCellType {
     /// Heading cell.
     Heading,
@@ -589,11 +627,14 @@ pub enum TableCellType {
 
 /// Table row.
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct TableRow<'a> {
     /// The HTML attributes of the element.
+    #[cfg_attr(feature = "serde", serde(borrow))]
     pub attributes: Vec<Node<'a>>,
 
     /// The cells in the row.
+    #[cfg_attr(feature = "serde", serde(borrow))]
     pub cells: Vec<TableCell<'a>>,
 
     /// The byte position in the wiki text where the element ends.
