@@ -200,7 +200,7 @@ pub struct ListItem<'a> {
 
 /// Parsed node.
 #[derive(Debug)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize), serde(tag = "type"))]
 pub enum Node<'a> {
     /// Toggle bold text. Parsed from the code `'''`.
     Bold {
